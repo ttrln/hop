@@ -21,8 +21,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.*;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.vfs2.FileFilter;
 import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSelectInfo;
+import org.apache.commons.vfs2.FileSystemException;
 import org.apache.hop.core.Const;
 import org.apache.hop.core.config.DescribedVariablesConfigFile;
 import org.apache.hop.core.config.IConfigFile;
@@ -39,10 +44,14 @@ import org.apache.hop.projects.config.ProjectsConfigSingleton;
 import org.apache.hop.projects.util.Defaults;
 import org.apache.hop.projects.util.ProjectsUtil;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.io.File;
+
 
 public class Project extends ConfigFile implements IConfigFile {
 
@@ -294,6 +303,19 @@ public class Project extends ConfigFile implements IConfigFile {
         // Project not found: config error, stop looking
         realParentProjectName = null;
       }
+    }
+  }
+  public static void copyParentProjectFolders(String sourceDirectoryLocation, String destinationDirectoryLocation, String metadataFolderName) throws HopException {
+    try {
+      IOFileFilter metadataFolderNameFilter = new NotFileFilter(new NameFileFilter(metadataFolderName));
+      AndFileFilter filter = new AndFileFilter(DirectoryFileFilter.DIRECTORY, metadataFolderNameFilter);
+
+      File sourceDirectory = new File(sourceDirectoryLocation);
+      File destinationDirectory = new File(destinationDirectoryLocation);
+      FileUtils.copyDirectory(sourceDirectory, destinationDirectory);
+
+    } catch (IOException e) {
+      throw new HopException("Parent project folders can not be copied to new project",e);
     }
   }
 

@@ -40,6 +40,8 @@ import org.apache.hop.history.AuditManager;
 import org.apache.hop.i18n.BaseMessages;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
 import org.apache.hop.metadata.api.IHopMetadataSerializer;
+import org.apache.hop.metadata.serializer.json.JsonMetadataProvider;
+import org.apache.hop.metadata.serializer.multi.MultiMetadataProvider;
 import org.apache.hop.pipeline.config.PipelineRunConfiguration;
 import org.apache.hop.pipeline.engines.local.LocalPipelineRunConfiguration;
 import org.apache.hop.projects.config.ProjectsConfig;
@@ -327,11 +329,13 @@ public class ProjectsGuiPlugin {
 
         // Save the project-config.json file as well in the project itself
         //
+        boolean newProject = true;
         FileObject configFile =
             HopVfs.getFileObject(projectConfig.getActualProjectConfigFilename(variables));
         if (!configFile.exists()) {
           // Create the empty configuration file if it does not exists
           project.saveToFile();
+          newProject = true;
         } else {
           // If projects exists load configuration
           MessageBox box = new MessageBox(hopGui.getDisplay().getActiveShell(), SWT.ICON_QUESTION | SWT.OK);
@@ -341,6 +345,7 @@ public class ProjectsGuiPlugin {
           box.open();
 
           project.readFromFile();
+          newProject = false;
         }
 
         refreshProjectsList();
@@ -402,7 +407,14 @@ public class ProjectsGuiPlugin {
             wrcSerializer.save(local);
           }
         }
+        // Copy parent folder structure
+        if (newProject){
+          String source = ((JsonMetadataProvider) ((MultiMetadataProvider) prcSerializer.getMetadataProvider()).getProviders().get(0)).getVariables().getVariable("PROJECT_HOME");
+          String destination = ((JsonMetadataProvider) ((MultiMetadataProvider) prcSerializer.getMetadataProvider()).getProviders().get(1)).getVariables().getVariable("PROJECT_HOME");
+          String metadataFolderName = ((JsonMetadataProvider) ((MultiMetadataProvider) prcSerializer.getMetadataProvider()).getProviders().get(0)).getBaseFolder();
+          project.copyParentProjectFolders(source, destination, metadataFolderName );
 
+        }
         // Ask to put the project in a lifecycle environment
         //
         MessageBox box =
