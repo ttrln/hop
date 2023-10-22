@@ -31,6 +31,7 @@ import org.apache.hop.core.gui.plugin.toolbar.GuiToolbarElement;
 import org.apache.hop.core.gui.plugin.toolbar.GuiToolbarElementType;
 import org.apache.hop.core.logging.ILogChannel;
 import org.apache.hop.core.logging.LogChannel;
+import org.apache.hop.core.util.FileUtil;
 import org.apache.hop.core.variables.DescribedVariable;
 import org.apache.hop.core.variables.IVariables;
 import org.apache.hop.core.variables.Variables;
@@ -70,6 +71,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -335,7 +337,29 @@ public class ProjectsGuiPlugin {
         if (!configFile.exists()) {
           // Create the empty configuration file if it does not exists
           project.saveToFile();
-          newProject = true;
+          // Copy parent folder structure
+          String source = null;
+          for (ProjectConfig pc : config.getProjectConfigurations()){
+            if (pc.getProjectName().equals(project.getParentProjectName())){
+              source = pc.getProjectHome();
+            }
+          }
+          if (null != source && !source.isEmpty()) {
+            if (!FileUtil.isFullyQualified(source)) {
+              source = variables.getVariable("user.dir") + File.separator + source;
+            }
+            Project parentProject = new Project(source + File.separator + projectConfig.getConfigFilename());
+
+            String metadataFolderName = parentProject.getMetadataBaseFolder();
+            if (!FileUtil.isFullyQualified(metadataFolderName)) {
+              metadataFolderName = variables.getVariable("user.dir") + File.separator + metadataFolderName;
+            }
+            String destination = projectConfig.getProjectHome();
+
+            project.copyParentProjectFolders(source, destination, metadataFolderName);
+          }else{
+            throw new Exception("Parent project name not found");
+          }
         } else {
           // If projects exists load configuration
           MessageBox box = new MessageBox(hopGui.getDisplay().getActiveShell(), SWT.ICON_QUESTION | SWT.OK);
@@ -345,7 +369,6 @@ public class ProjectsGuiPlugin {
           box.open();
 
           project.readFromFile();
-          newProject = false;
         }
 
         refreshProjectsList();
@@ -407,14 +430,7 @@ public class ProjectsGuiPlugin {
             wrcSerializer.save(local);
           }
         }
-        // Copy parent folder structure
-        if (newProject){
-          String source = ((JsonMetadataProvider) ((MultiMetadataProvider) prcSerializer.getMetadataProvider()).getProviders().get(0)).getVariables().getVariable("PROJECT_HOME");
-          String destination = ((JsonMetadataProvider) ((MultiMetadataProvider) prcSerializer.getMetadataProvider()).getProviders().get(1)).getVariables().getVariable("PROJECT_HOME");
-          String metadataFolderName = ((JsonMetadataProvider) ((MultiMetadataProvider) prcSerializer.getMetadataProvider()).getProviders().get(0)).getBaseFolder();
-          project.copyParentProjectFolders(source, destination, metadataFolderName );
 
-        }
         // Ask to put the project in a lifecycle environment
         //
         MessageBox box =
