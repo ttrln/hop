@@ -312,7 +312,7 @@ public class Project extends ConfigFile implements IConfigFile {
 
       File sourceDirectory = new File(sourceDirectoryLocation);
       File destinationDirectory = new File(destinationDirectoryLocation);
-      FileUtils.copyDirectory(sourceDirectory, destinationDirectory);
+      FileUtils.copyDirectory(sourceDirectory, destinationDirectory, filter);
 
     } catch (IOException e) {
       throw new HopException("Parent project folders can not be copied to new project",e);

@@ -346,13 +346,15 @@ public class ProjectsGuiPlugin {
           }
           if (null != source && !source.isEmpty()) {
             if (!FileUtil.isFullyQualified(source)) {
-              source = variables.getVariable("user.dir") + File.separator + source;
+              source = variables.getVariable("user.dir") + Const.FILE_SEPARATOR + source;
             }
-            Project parentProject = new Project(source + File.separator + projectConfig.getConfigFilename());
+            Project parentProject = new Project(source + Const.FILE_SEPARATOR +
+                    projectConfig.getConfigFilename());
 
             String metadataFolderName = parentProject.getMetadataBaseFolder();
             if (!FileUtil.isFullyQualified(metadataFolderName)) {
-              metadataFolderName = variables.getVariable("user.dir") + File.separator + metadataFolderName;
+              metadataFolderName = metadataFolderName.replace("${" + ProjectsUtil.VARIABLE_PROJECT_HOME + "}",
+                      source);
             }
             String destination = projectConfig.getProjectHome();
 
