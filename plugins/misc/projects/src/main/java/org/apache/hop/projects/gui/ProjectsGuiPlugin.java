@@ -352,10 +352,12 @@ public class ProjectsGuiPlugin {
                     projectConfig.getConfigFilename());
 
             String metadataFolderName = parentProject.getMetadataBaseFolder();
-            if (!FileUtil.isFullyQualified(metadataFolderName)) {
-              metadataFolderName = metadataFolderName.replace("${" + ProjectsUtil.VARIABLE_PROJECT_HOME + "}",
-                      source);
-            }
+
+            metadataFolderName = "/" + metadataFolderName;
+            metadataFolderName = metadataFolderName.substring(metadataFolderName.lastIndexOf("/")+1, metadataFolderName.length());
+            metadataFolderName = "\\" + metadataFolderName;
+            metadataFolderName = metadataFolderName.substring(metadataFolderName.lastIndexOf("\\")+1, metadataFolderName.length());
+
             String destination = projectConfig.getProjectHome();
 
             project.copyParentProjectFolders(source, destination, metadataFolderName);
