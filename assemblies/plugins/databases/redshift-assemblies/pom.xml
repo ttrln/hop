@@ -23,20 +23,16 @@
     <parent>
         <artifactId>hop-assemblies-plugins-databases</artifactId>
         <groupId>org.apache.hop</groupId>
-        <version>2.6.0</version>
+        <version>2.7.0-SNAPSHOT</version>
     </parent>
 
 
     <artifactId>hop-assemblies-plugins-databases-redshift</artifactId>
-    <version>2.6.0</version>
+    <version>2.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Hop Assemblies Plugins Databases Redshift</name>
     <description />
-
-    <properties>
-        <redshift.version>2.1.0.8</redshift.version>
-    </properties>
 
 
     <dependencies>
@@ -44,11 +40,6 @@
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-databases-redshift</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.amazon.redshift</groupId>
-            <artifactId>redshift-jdbc42</artifactId>
-            <version>${redshift.version}</version>
         </dependency>
     </dependencies>
 

@@ -23,30 +23,20 @@
     <parent>
         <artifactId>hop-assemblies-plugins-databases</artifactId>
         <groupId>org.apache.hop</groupId>
-        <version>2.6.0</version>
+        <version>2.7.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>hop-assemblies-plugins-databases-snowflake</artifactId>
-    <version>2.6.0</version>
+    <version>2.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Hop Assemblies Plugins Databases Snowflake</name>
     <description />
-
-    <properties>
-        <snowflake.jdbc.version>3.13.30</snowflake.jdbc.version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-databases-snowflake</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.snowflake</groupId>
-            <artifactId>snowflake-jdbc</artifactId>
-            <version>${snowflake.jdbc.version}</version>
         </dependency>
     </dependencies>
 

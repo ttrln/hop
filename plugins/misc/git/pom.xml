@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hop-plugins-misc-git</artifactId>
-    <version>2.6.0</version>
+    <version>2.7.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Hop Plugins Miscellaneous Git</name>
@@ -28,11 +28,11 @@
     <parent>
         <groupId>org.apache.hop</groupId>
         <artifactId>hop-plugins-misc</artifactId>
-        <version>2.6.0</version>
+        <version>2.7.0-SNAPSHOT</version>
     </parent>
 
     <properties>
-        <dependency.jgit.revision>5.1.13.202002110435-r</dependency.jgit.revision>
+        <dependency.jgit.revision>6.7.0.202309050840-r</dependency.jgit.revision>
     </properties>
 
     <dependencies>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-ui</artifactId>
-            <version>2.6.0</version>
+            <version>2.7.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
